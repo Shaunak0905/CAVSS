@@ -1,0 +1,344 @@
+# CAVSS Configuration File
+# All thresholds, weights, and settings in one place
+# No magic numbers in code - everything configurable here
+
+# =============================================================================
+# SYSTEM SETTINGS
+# =============================================================================
+system:
+  name: "CAVSS"
+  version: "1.0.0"
+  debug: true
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  log_file: "logs/cavss.log"
+  
+  # Performance settings
+  target_fps: 15
+  process_every_n_frames: 2  # Process every 2nd frame for performance
+  
+  # Display settings
+  dashboard_width: 1280
+  dashboard_height: 720
+  show_fps: true
+  show_debug_overlay: true
+
+# =============================================================================
+# INPUT FEEDS
+# =============================================================================
+feeds:
+  # Driver Monitoring (Webcam)
+  dms:
+    source: 0  # Webcam index (0 = default)
+    width: 640
+    height: 480
+    fps: 30
+    flip_horizontal: true  # Mirror for natural feel
+  
+  # Road Monitoring (YouTube or local video)
+  adas:
+    source: "youtube"  # "youtube", "local", or "webcam"
+    youtube_url: ""  # Set via command line or leave empty for prompt
+    local_path: ""  # Path to local video file
+    width: 1280
+    height: 720
+
+# =============================================================================
+# DRIVER MONITORING SYSTEM (DMS)
+# =============================================================================
+dms:
+  # MediaPipe Face Mesh settings
+  face_mesh:
+    max_num_faces: 1
+    refine_landmarks: true
+    min_detection_confidence: 0.5
+    min_tracking_confidence: 0.5
+  
+  # Drowsiness Detection
+  drowsiness:
+    # Eye Aspect Ratio (EAR)
+    ear_threshold: 0.25  # Below this = eyes closed
+    ear_consecutive_frames: 3  # Frames before confirming drowsy
+    
+    # PERCLOS (Percentage Eye Closure)
+    perclos_window_seconds: 60  # Rolling window
+    perclos_threshold: 0.40  # 40% closure = severe drowsiness
+    
+    # Yawning detection (mouth aspect ratio)
+    mar_threshold: 0.6  # Above this = yawning
+    yawn_consecutive_frames: 5
+    
+    # Eye landmark indices (MediaPipe Face Mesh)
+    left_eye_indices: [362, 385, 387, 263, 373, 380]
+    right_eye_indices: [33, 160, 158, 133, 153, 144]
+    mouth_indices: [61, 291, 0, 17, 405, 321, 375, 78]
+  
+  # Attention/Distraction Detection
+  attention:
+    # Head pose thresholds (degrees)
+    pitch_threshold: 20  # Looking up/down
+    yaw_threshold: 30  # Looking left/right
+    roll_threshold: 25  # Head tilt
+    
+    # Duration before alert
+    distraction_duration_seconds: 2.0
+    
+    # Smoothing (reduce jitter)
+    smoothing_factor: 0.3
+
+# =============================================================================
+# ADVANCED DRIVER ASSISTANCE SYSTEM (ADAS)
+# =============================================================================
+adas:
+  # Object Detection (YOLOv8)
+  object_detection:
+    model_path: "yolov8n.pt"
+    confidence_threshold: 0.5
+    iou_threshold: 0.45
+    device: "cpu"  # "cpu" or "cuda" or "mps"
+    
+    # COCO classes to detect
+    # 0: person, 1: bicycle, 2: car, 3: motorcycle, 5: bus, 7: truck
+    target_classes: [0, 1, 2, 3, 5, 7]
+    
+    # Class names for display
+    class_names:
+      0: "Person"
+      1: "Bicycle"
+      2: "Car"
+      3: "Motorcycle"
+      5: "Bus"
+      7: "Truck"
+  
+  # Lane Detection
+  lane_detection:
+    # Region of Interest (percentage of frame)
+    roi_top: 0.55  # Top of ROI
+    roi_bottom: 0.95  # Bottom of ROI
+    roi_left: 0.1
+    roi_right: 0.9
+    
+    # Canny edge detection
+    canny_low_threshold: 50
+    canny_high_threshold: 150
+    
+    # Hough Line Transform
+    hough_rho: 2
+    hough_theta_degrees: 1
+    hough_threshold: 50
+    hough_min_line_length: 40
+    hough_max_line_gap: 100
+    
+    # Lane departure
+    departure_threshold: 0.15  # 15% offset from center
+    
+    # Smoothing
+    lane_smoothing_frames: 5
+  
+  # Collision Warning
+  collision:
+    # Time-to-Collision thresholds (seconds)
+    ttc_warning: 3.0  # Yellow alert
+    ttc_critical: 1.5  # Red alert
+    
+    # Distance estimation (approximate, camera-based)
+    # Assumes average car height of 1.5m for distance calculation
+    reference_height_meters: 1.5
+    focal_length_pixels: 800  # Calibrate for your camera
+
+# =============================================================================
+# CONTEXT RISK ENGINE (CRE) - THE CORE INNOVATION
+# =============================================================================
+context_engine:
+  # Base risk weights (must sum to 1.0)
+  weights:
+    drowsiness: 0.30
+    attention: 0.20
+    speed: 0.15
+    lane_departure: 0.10
+    forward_collision: 0.15
+    visibility: 0.10
+  
+  # Time-of-day context multipliers
+  time_multipliers:
+    # Format: [start_hour, end_hour, multiplier]
+    - [0, 5, 1.5]    # Midnight to 5 AM - peak drowsiness
+    - [5, 7, 1.2]    # Early morning
+    - [7, 22, 1.0]   # Normal daytime
+    - [22, 24, 1.3]  # Late night
+  
+  # Zone-based context multipliers
+  zone_multipliers:
+    blackspot: 1.5
+    school_zone: 1.4
+    highway: 1.3
+    rural: 1.2
+    urban: 1.0
+    residential: 0.9
+  
+  # Visibility context multipliers
+  visibility_multipliers:
+    fog: 1.4
+    heavy_rain: 1.4
+    rain: 1.3
+    night: 1.3
+    dusk_dawn: 1.2
+    overcast: 1.1
+    clear: 1.0
+  
+  # Speed-based context (higher speed = higher risk)
+  speed_thresholds:
+    # Format: [min_speed_kmh, max_speed_kmh, risk_score]
+    - [0, 30, 0.2]
+    - [30, 60, 0.4]
+    - [60, 80, 0.6]
+    - [80, 100, 0.8]
+    - [100, 999, 1.0]
+  
+  # Final risk score thresholds for alert levels
+  alert_thresholds:
+    green: 0.0      # 0.0 - 0.3: Safe
+    yellow: 0.3     # 0.3 - 0.5: Caution
+    orange: 0.5     # 0.5 - 0.7: Warning
+    red: 0.7        # 0.7 - 0.85: Danger
+    critical: 0.85  # 0.85 - 1.0: Critical
+
+# =============================================================================
+# ALERT SYSTEM
+# =============================================================================
+alerts:
+  # Audio settings
+  audio:
+    enabled: true
+    volume: 0.7  # 0.0 to 1.0
+    
+    # Beep frequencies (Hz)
+    frequencies:
+      gentle: 440
+      warning: 660
+      alarm: 880
+      critical: 1000
+    
+    # Beep durations (seconds)
+    durations:
+      gentle: 0.2
+      warning: 0.3
+      alarm: 0.5
+      critical: 0.1  # Rapid beeps
+  
+  # Voice alerts (text-to-speech)
+  voice:
+    enabled: true
+    rate: 150  # Words per minute
+    
+    # Alert messages
+    messages:
+      drowsy_mild: "Please stay alert."
+      drowsy_moderate: "Warning. Drowsiness detected. Consider taking a break."
+      drowsy_severe: "Alert! You appear very drowsy. Please pull over safely."
+      distraction: "Keep your eyes on the road."
+      lane_departure: "Lane departure warning."
+      collision_warning: "Caution. Vehicle ahead."
+      collision_critical: "Brake now!"
+      critical: "Critical alert! Pull over immediately."
+  
+  # Visual alerts
+  visual:
+    enabled: true
+    
+    # Colors (BGR format for OpenCV)
+    colors:
+      green: [0, 255, 0]
+      yellow: [0, 255, 255]
+      orange: [0, 165, 255]
+      red: [0, 0, 255]
+      critical: [0, 0, 255]  # Flashing red
+    
+    # Flash settings for critical
+    flash_interval_ms: 200
+  
+  # Cooldown between same alert type (seconds)
+  cooldown:
+    drowsiness: 10
+    distraction: 5
+    lane: 3
+    collision: 2
+    voice: 5  # Minimum gap between voice alerts
+
+# =============================================================================
+# MOCK/SIMULATION DATA (For Demo)
+# =============================================================================
+simulation:
+  # Mock GPS route (Pune demo route)
+  gps:
+    enabled: true
+    route_file: "data/demo_route.json"
+    speed_kmh: 60  # Simulated speed
+    
+    # Demo scenarios (triggered by keyboard in demo mode)
+    scenarios:
+      normal:
+        zone: "urban"
+        speed: 40
+        time_override: "14:00"
+      
+      highway_night:
+        zone: "highway"
+        speed: 80
+        time_override: "02:00"
+      
+      blackspot_drowsy:
+        zone: "blackspot"
+        speed: 60
+        time_override: "03:00"
+  
+  # Visibility simulation (keyboard toggle)
+  visibility:
+    default: "clear"
+    # Press 'v' to cycle: clear -> overcast -> rain -> fog -> night -> clear
+
+# =============================================================================
+# OUTPUT/RECORDING
+# =============================================================================
+output:
+  # Record demo session
+  recording:
+    enabled: false
+    output_dir: "output/recordings"
+    format: "mp4"
+    fps: 15
+  
+  # Screenshots
+  screenshots:
+    output_dir: "output/screenshots"
+    key: "s"  # Press 's' to capture
+  
+  # Data logging (for analysis)
+  data_log:
+    enabled: true
+    output_dir: "output/logs"
+    log_interval_seconds: 1  # Log every second
+
+# =============================================================================
+# KEYBOARD CONTROLS (Demo Mode)
+# =============================================================================
+controls:
+  quit: "q"
+  pause: "p"
+  screenshot: "s"
+  toggle_debug: "d"
+  toggle_recording: "r"
+  
+  # Scenario switching
+  scenario_normal: "1"
+  scenario_highway: "2"
+  scenario_blackspot: "3"
+  
+  # Visibility cycling
+  cycle_visibility: "v"
+  
+  # Time override
+  time_day: "t"
+  time_night: "n"
+  
+  # Simulate drowsiness (for testing)
+  simulate_drowsy: "z"

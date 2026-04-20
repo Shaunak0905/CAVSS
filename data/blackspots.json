@@ -1,0 +1,74 @@
+{
+  "blackspots": [
+    {
+      "id": "MH-PUN-001",
+      "name": "Katraj Ghat",
+      "latitude": 18.4529,
+      "longitude": 73.8553,
+      "type": "ghat_section",
+      "accident_count_2023": 47,
+      "fatalities_2023": 12
+    },
+    {
+      "id": "MH-PUN-002",
+      "name": "Pune-Mumbai Expressway KM 42",
+      "latitude": 18.7123,
+      "longitude": 73.3456,
+      "type": "highway",
+      "accident_count_2023": 31,
+      "fatalities_2023": 8
+    },
+    {
+      "id": "MH-PUN-003",
+      "name": "Navale Bridge",
+      "latitude": 18.4612,
+      "longitude": 73.8101,
+      "type": "bridge",
+      "accident_count_2023": 23,
+      "fatalities_2023": 5
+    },
+    {
+      "id": "MH-PUN-004",
+      "name": "Chandni Chowk",
+      "latitude": 18.5142,
+      "longitude": 73.7975,
+      "type": "intersection",
+      "accident_count_2023": 38,
+      "fatalities_2023": 9
+    },
+    {
+      "id": "MH-PUN-005",
+      "name": "Warje Malwadi",
+      "latitude": 18.4876,
+      "longitude": 73.8021,
+      "type": "urban_corridor",
+      "accident_count_2023": 19,
+      "fatalities_2023": 4
+    },
+    {
+      "id": "MH-PUN-006",
+      "name": "Kharadi Bypass",
+      "latitude": 18.5563,
+      "longitude": 73.9412,
+      "type": "bypass",
+      "accident_count_2023": 27,
+      "fatalities_2023": 7
+    }
+  ],
+  "school_zones": [
+    {
+      "id": "MH-PUN-SCH-001",
+      "name": "Deccan Gymkhana School Area",
+      "latitude": 18.5163,
+      "longitude": 73.8413,
+      "type": "school_zone"
+    },
+    {
+      "id": "MH-PUN-SCH-002",
+      "name": "Koregaon Park School Zone",
+      "latitude": 18.5362,
+      "longitude": 73.8924,
+      "type": "school_zone"
+    }
+  ]
+}

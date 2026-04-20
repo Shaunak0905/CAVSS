@@ -1,0 +1,25 @@
+# CAVSS Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core computer vision
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# Driver Monitoring System
+mediapipe>=0.10.0
+
+# Advanced Driver Assistance
+ultralytics>=8.0.0
+
+# Configuration
+PyYAML>=6.0
+
+# YouTube feed
+yt-dlp>=2024.0.0
+
+# Audio alerts
+pygame>=2.5.0
+pyttsx3>=2.90
+
+# Image utilities
+Pillow>=10.0.0

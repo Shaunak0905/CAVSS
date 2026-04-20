@@ -1,0 +1,100 @@
+# ============================================================
+# CAVSS - Connected & Autonomous Vehicle Safety System
+# .gitignore
+# ============================================================
+
+# ---------------------------
+# Python
+# ---------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+*.so
+
+# ---------------------------
+# Virtual Environment
+# ---------------------------
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ---------------------------
+# Logs
+# ---------------------------
+logs/
+*.log
+
+# ---------------------------
+# ML Model Weights
+# ---------------------------
+# Large binary model files — download separately
+*.pt
+*.pth
+*.onnx
+*.weights
+*.tflite
+*.caffemodel
+
+# MediaPipe task bundles (large binary assets)
+models/*.task
+
+# ---------------------------
+# YOLO / Ultralytics run artifacts
+# ---------------------------
+runs/
+
+# ---------------------------
+# Jupyter Notebooks
+# ---------------------------
+.ipynb_checkpoints/
+*.ipynb
+
+# ---------------------------
+# IDE & Editor
+# ---------------------------
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ---------------------------
+# OS-generated
+# ---------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------
+# Secrets & local config overrides
+# ---------------------------
+.env
+.env.*
+secrets.yaml
+secrets.json
+local_config.yaml
+
+# ---------------------------
+# Pytest / coverage
+# ---------------------------
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml

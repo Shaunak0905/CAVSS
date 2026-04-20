@@ -1,0 +1,70 @@
+{
+  "route_name": "Pune Demo Route",
+  "description": "Simulated route through Pune for CAVSS demo",
+  "waypoints": [
+    {
+      "time_seconds": 0,
+      "lat": 18.5204,
+      "lon": 73.8567,
+      "zone": "urban",
+      "name": "Pune City Centre",
+      "speed_kmh": 40
+    },
+    {
+      "time_seconds": 60,
+      "lat": 18.5142,
+      "lon": 73.7975,
+      "zone": "blackspot",
+      "name": "Chandni Chowk (Blackspot)",
+      "speed_kmh": 50
+    },
+    {
+      "time_seconds": 120,
+      "lat": 18.4876,
+      "lon": 73.8021,
+      "zone": "urban",
+      "name": "Warje",
+      "speed_kmh": 45
+    },
+    {
+      "time_seconds": 180,
+      "lat": 18.4800,
+      "lon": 73.8200,
+      "zone": "highway",
+      "name": "NH48 Entry",
+      "speed_kmh": 80
+    },
+    {
+      "time_seconds": 240,
+      "lat": 18.4612,
+      "lon": 73.8101,
+      "zone": "blackspot",
+      "name": "Navale Bridge (Blackspot)",
+      "speed_kmh": 70
+    },
+    {
+      "time_seconds": 300,
+      "lat": 18.4529,
+      "lon": 73.8553,
+      "zone": "blackspot",
+      "name": "Katraj Ghat (Blackspot)",
+      "speed_kmh": 55
+    },
+    {
+      "time_seconds": 360,
+      "lat": 18.4200,
+      "lon": 73.7800,
+      "zone": "rural",
+      "name": "Outskirts",
+      "speed_kmh": 60
+    },
+    {
+      "time_seconds": 420,
+      "lat": 18.3900,
+      "lon": 73.7500,
+      "zone": "highway",
+      "name": "Expressway",
+      "speed_kmh": 100
+    }
+  ]
+}
