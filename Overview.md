@@ -312,7 +312,7 @@ python main.py --youtube-url "VIDEO_URL_HERE"
 
 ## Contact
 
-### **Team Lead**: Vedant
+### **Team Lead**: Vedant Shinde
 ### **Guide**: Asst. Prof. Amit Nehte 
 ### **Contributors**: 
 - Vipul Deshmukh
