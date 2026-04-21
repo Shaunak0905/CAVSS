@@ -313,5 +313,9 @@ python main.py --youtube-url "VIDEO_URL_HERE"
 ## Contact
 
 **Team Lead**: Vedant
-**Guide**: [Your Guide's Name]
+**Guide**: Asst. Prof. Amit Nehte 
+**Contributors**: 
+- Vipul Deshmukh
+- Shaunak Pandit
+- Shubh Rajput 
 **Institution**: MIT-WPU, Pune
