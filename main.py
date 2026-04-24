@@ -54,6 +54,10 @@ logger = logging.getLogger("CAVSS")
 # Project imports
 # ---------------------------------------------------------------------------
 from feeds.webcam_feed import WebcamFeed
+try:
+    from feeds.picamera_feed import PiCameraFeed
+except ImportError:
+    PiCameraFeed = None
 from feeds.youtube_feed import YouTubeFeed, LocalVideoFeed
 
 from dms.face_mesh import FaceMeshProcessor
@@ -115,13 +119,29 @@ def main() -> None:
     # -----------------------------------------------------------------------
     feeds_cfg = cfg.get("feeds", {})
 
-    dms_feed = WebcamFeed(
-        source=feeds_cfg["dms"]["source"],
-        width=feeds_cfg["dms"]["width"],
-        height=feeds_cfg["dms"]["height"],
-        fps=feeds_cfg["dms"]["fps"],
-        flip_horizontal=feeds_cfg["dms"]["flip_horizontal"],
-    )
+    feed_type = feeds_cfg["dms"].get("type", "webcam")
+    
+    if feed_type == "picamera":
+        if PiCameraFeed is None:
+            logger.error("PiCameraFeed is not available. Falling back to WebcamFeed.")
+            feed_type = "webcam"
+        else:
+            dms_feed = PiCameraFeed(
+                source=feeds_cfg["dms"]["source"],
+                width=feeds_cfg["dms"]["width"],
+                height=feeds_cfg["dms"]["height"],
+                fps=feeds_cfg["dms"]["fps"],
+                flip_horizontal=feeds_cfg["dms"]["flip_horizontal"],
+            )
+            
+    if feed_type == "webcam":
+        dms_feed = WebcamFeed(
+            source=feeds_cfg["dms"]["source"],
+            width=feeds_cfg["dms"]["width"],
+            height=feeds_cfg["dms"]["height"],
+            fps=feeds_cfg["dms"]["fps"],
+            flip_horizontal=feeds_cfg["dms"]["flip_horizontal"],
+        )
 
     adas_feed = None
     if not args.no_adas:
