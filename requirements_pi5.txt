@@ -1,0 +1,57 @@
+# CAVSS Dependencies for Raspberry Pi 5 Deployment
+# Install with: pip install -r requirements_pi5.txt --break-system-packages
+# (or preferably inside a virtual environment: python3 -m venv env && source env/bin/activate)
+
+# ---------------------------------------------------------
+# Core Computer Vision & Data
+# Note: For Pi 5 (aarch64), OpenCV wheels are available. 
+# opencv-python-headless is recommended if you don't need GUI windows.
+# ---------------------------------------------------------
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# ---------------------------------------------------------
+# Driver Monitoring System (DMS)
+# Note: MediaPipe now provides official wheels for aarch64 (Pi OS 64-bit).
+# ---------------------------------------------------------
+mediapipe>=0.10.0
+
+# ---------------------------------------------------------
+# Advanced Driver Assistance (ADAS)
+# YOLOv8 for object detection. 
+# ---------------------------------------------------------
+ultralytics>=8.0.0
+# Highly recommended to export your YOLO model to ONNX for Pi 5 performance:
+onnxruntime>=1.16.0 
+
+# ---------------------------------------------------------
+# System & Configuration
+# ---------------------------------------------------------
+PyYAML>=6.0
+# psutil is useful for monitoring Pi 5 temperature and memory during inference
+psutil>=5.9.0 
+
+# ---------------------------------------------------------
+# Video Feeds & Image Utilities
+# ---------------------------------------------------------
+Pillow>=10.0.0
+yt-dlp>=2024.0.0
+pafy>=0.5.5
+
+# ---------------------------------------------------------
+# Audio Alerts
+# Note: On Raspberry Pi OS, you may need to install system dependencies:
+# sudo apt-get install libespeak1
+# ---------------------------------------------------------
+pygame>=2.5.0
+pyttsx3>=2.90
+
+# ---------------------------------------------------------
+# Raspberry Pi 5 Specific Hardware Packages
+# ---------------------------------------------------------
+# Camera: Pi OS Bookworm uses libcamera. legacy picamera will NOT work.
+picamera2>=0.3.0
+
+# GPIO: The Pi 5 uses the new RP1 chip, so legacy RPi.GPIO does NOT work natively.
+# rpi-lgpio provides a drop-in RPi.GPIO replacement compatible with Pi 5.
+rpi-lgpio>=0.4
