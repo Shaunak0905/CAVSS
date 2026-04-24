@@ -26,9 +26,10 @@ system:
 # INPUT FEEDS
 # =============================================================================
 feeds:
-  # Driver Monitoring (Webcam)
+  # Driver Monitoring (Webcam/PiCamera)
   dms:
-    source: 0  # Webcam index (0 = default)
+    type: "picamera"  # "webcam" for USB/laptop cameras, "picamera" for Pi CSI cameras
+    source: 0  # Webcam index or CSI port (0 or 1)
     width: 640
     height: 480
     fps: 30
